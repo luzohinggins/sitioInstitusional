@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding CX - Landing Page | Porta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ================================================================ 
+           RESTAURACIÓN DE VARIABLES Y ESTILOS ORIGINALES
+           ================================================================ */
+        :root {
+            --lila-principal: #522883;
+            --purpura-medio: #72298d;
+            --purpura-oscuro: #3d1a52;
+            --naranja-base: #ee7b1c;
+            --naranja-rosado: #ed631d;
+            --beige-claro: #fdf1e9;
+            --texto-principal: #222222;
+            --texto-secundario: #6b6b6b;
+            --verde-check: #10B981;
+            --amber-400: #FBBF24;
+            --amber-500: #F59E0B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html, body { height: 100%; background-color: #ffffff; color: var(--texto-principal); line-height: 1.6; overflow: hidden; }
+        
+        .documento {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            flex-direction: column;
+            overflow: hidden;
+            background: white;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            display: none;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            display: flex;
+            z-index: 10;
+        }
+
+        /* HEADERS Y FOOTERS */
+        .slide-header {
+            background: linear-gradient(135deg, var(--purpura-oscuro) 0%, var(--lila-principal) 55%, var(--purpura-medio) 100%);
+            padding: 16px 55px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 70px;
+            box-shadow: 0 4px 15px rgba(82, 40, 131, 0.2);
+        }
+
+        .porta-logo-small { 
+            height: 40px;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.6s ease-out;
+        }
+        
+        .porta-logo-small:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 5px 10px rgba(255,255,255,0.2));
+        }
+        
+        .slide-number { 
+            color: var(--naranja-base); 
+            font-weight: 700; 
+            font-size: 1.4em;
+            animation: slideInRight 0.6s ease-out;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .slide-number::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--amber-500);
+            transition: width 0.4s ease;
+        }
+        
+        .slide-header:hover .slide-number::after {
+            width: 100%;
+        }
+
+        .slide-footer {
+            background: var(--beige-claro);
+            padding: 12px 55px;
+            border-top: 3px solid var(--naranja-base);
+            font-size: 0.7em;
+            color: var(--texto-secundario);
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(82, 40, 131, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .slide-footer:hover {
+            background: linear-gradient(135deg, var(--beige-claro), rgba(238, 123, 28, 0.05));
+            border-top-color: var(--lila-principal);
+        }
+
+        .slide-content { flex: 1; padding: 30px 60px; display: flex; flex-direction: column; justify-content: center; }
+
+        /* TÍTULOS CON DEGRADADO */
+        .slide-title {
+            background: linear-gradient(135deg, var(--lila-principal) 0%, var(--purpura-medio) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.75em;
+            font-weight: 700;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 4px solid var(--naranja-base);
+            display: inline-block;
+        }
+
+        /* PORTADA ORIGINAL CON MEJORAS */
+        .cover-slide {
+            background: linear-gradient(135deg, #1c0730 0%, var(--purpura-oscuro) 25%, var(--lila-principal) 55%, var(--purpura-medio) 80%, #9b3fb8 100%) !important;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cover-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(238, 123, 28, 0.1) 0%, transparent 50%), 
+                        radial-gradient(circle at 80% 80%, rgba(82, 40, 131, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .cover-slide > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .amber-badge {
+            background: linear-gradient(135deg, var(--amber-400), var(--amber-500));
+            color: #78350F;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            text-transform: uppercase;
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s ease;
+            animation: slideInDown 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .amber-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+        
+        .amber-badge:hover {
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 12px 24px rgba(245, 158, 11, 0.4);
+        }
+        
+        .amber-badge:hover::before {
+            left: 100%;
+        }
+
+        /* GRID Y CARDS CON HOVER */
+        .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .feature-module {
+            background: linear-gradient(135deg, rgba(82, 40, 131, 0.08) 0%, rgba(238, 123, 28, 0.06) 100%);
+            border-left: 4px solid var(--lila-principal);
+            padding: 20px;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s ease-out backwards;
+        }
+        
+        .feature-module::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .feature-module:hover::before {
+            left: 100%;
+        }
+
+        .feature-module:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(82, 40, 131, 0.2);
+            border-left-color: var(--naranja-base);
+            background: linear-gradient(135deg, rgba(82, 40, 131, 0.12) 0%, rgba(238, 123, 28, 0.1) 100%);
+        }
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .feature-module:nth-child(1) { animation-delay: 0.1s; }
+        .feature-module:nth-child(2) { animation-delay: 0.2s; }
+        .feature-module:nth-child(3) { animation-delay: 0.3s; }
+
+        /* BOX DE PRECIO DESTACADO */
+        .highlight-box {
+            background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio));
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(238, 123, 28, 0.3);
+            animation: slideInUp 0.7s ease-out backwards;
+        }
+        
+        .highlight-box::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(238, 123, 28, 0.1) 0%, transparent 70%);
+            transition: all 0.6s ease;
+        }
+
+        .highlight-box:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(82, 40, 131, 0.3), 0 0 30px rgba(238, 123, 28, 0.2);
+            border-color: var(--naranja-base);
+        }
+        
+        .highlight-box:hover::after {
+            right: -20%;
+            top: -20%;
+        }
+        
+        .highlight-box:nth-child(1) { animation-delay: 0.3s; }
+        .highlight-box:nth-child(2) { animation-delay: 0.5s; }
+
+        /* DECORATIVOS CON ANIMACIONES */
+        .hero-decor { 
+            position: absolute; 
+            opacity: 0.15; 
+            pointer-events: none;
+            filter: drop-shadow(0 0 8px rgba(238, 123, 28, 0.3));
+            transition: all 0.3s ease;
+        }
+        
+        .hero-decor:hover {
+            opacity: 0.25;
+            filter: drop-shadow(0 0 15px rgba(238, 123, 28, 0.5));
+        }
+
+        /* CHECKS ANIMADOS */
+        .check {
+            width: 22px; height: 22px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-right: 10px; font-size: 0.8em; font-weight: bold;
+            transition: all 0.3s ease;
+            animation: scaleIn 0.5s ease-out backwards;
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .check:hover {
+            transform: scale(1.3) rotate(15deg);
+        }
+        
+        .check.orange { 
+            background: linear-gradient(135deg, rgba(238, 123, 28, 0.2), rgba(245, 158, 11, 0.15));
+            color: var(--naranja-base);
+            box-shadow: 0 0 8px rgba(238, 123, 28, 0.3);
+        }
+        
+        li:nth-child(1) .check { animation-delay: 0.1s; }
+        li:nth-child(2) .check { animation-delay: 0.2s; }
+        li:nth-child(3) .check { animation-delay: 0.3s; }
+        li:nth-child(4) .check { animation-delay: 0.4s; }
+        li:nth-child(5) .check { animation-delay: 0.5s; }
+
+        /* ANIMACIONES DE ENTRADA Y DINAMISMO */
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(238, 123, 28, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(238, 123, 28, 0.8); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+        
+        .slide-content { animation: fadeInUp 0.8s ease-out forwards; }
+        .slide-header { animation: slideInDown 0.6s ease-out; }
+        
+        .slide-title {
+            animation: slideInLeft 0.8s ease-out 0.1s both;
+            transition: all 0.3s ease;
+        }
+        
+        .slide-title:hover {
+            transform: translateX(10px);
+            text-shadow: 0 5px 15px rgba(82, 40, 131, 0.2);
+        }
+        
+        /* MEJORAS ADICIONALES EN TEXTOS */
+        h4 {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-module:hover h4 {
+            color: var(--naranja-base);
+            transform: translateX(5px);
+        }
+        
+        /* ANIMACIÓN DE LISTAS */
+        ul.alcance-list li {
+            animation: slideInLeft 0.6s ease-out backwards;
+        }
+        
+        ul.alcance-list li:nth-child(1) { animation-delay: 0.1s; }
+        ul.alcance-list li:nth-child(2) { animation-delay: 0.2s; }
+        ul.alcance-list li:nth-child(3) { animation-delay: 0.3s; }
+        ul.alcance-list li:nth-child(4) { animation-delay: 0.4s; }
+        ul.alcance-list li:nth-child(5) { animation-delay: 0.5s; }
+        
+        /* EFECTO EN NÚMEROS Y PRECIOS */
+        h1, h2, h3 {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-module:hover h1,
+        .feature-module:hover h3 {
+            color: var(--naranja-base);
+        }
+        
+        /* EFECTOS DE TRANSICIÓN MEJORADOS */
+        .slide {
+            transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+    </style>
+</head>
+<body>
+
+<div class="documento">
+
+    <div class="slide cover-slide">
+        <svg class="hero-decor" style="top:35px;left:50px;width:70px; animation: floatUp 4s ease-in-out infinite;" viewBox="0 0 100 100"><path d="M50 0 L62 38 L100 50 L62 62 L50 100 L38 62 L0 50 L38 38 Z" fill="white"/></svg>
+        <svg class="hero-decor" style="bottom:70px;right:220px;width:55px; animation: floatUp 5s ease-in-out infinite 0.5s;" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="3"/></svg>
+
+        <div style="max-width: 900px; padding: 0 40px;">
+            <img src="logotipo_blanco.png" alt="Luz" style="height:80px; margin-bottom: 20px; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4)); animation: floatUp 3s ease-in-out infinite; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1) rotate(5deg)'; this.style.filter='drop-shadow(0 20px 40px rgba(238, 123, 28, 0.5))';" onmouseout="this.style.transform='scale(1) rotate(0)'; this.style.filter='drop-shadow(0 15px 30px rgba(0,0,0,0.4))';">
+            <br>
+            <span class="amber-badge">Propuesta Estratégica</span>
+            <h1 style="font-size: 3em; color: white; margin: 20px 0; font-weight: 900; line-height: 1.1; animation: slideInDown 0.8s ease-out 0.1s both;">Sitio Web Institucional<br>Para mostrar quién sos, qué hacés y cómo contactarte</h1>
+            <p style="color: rgba(255,255,255,0.8); font-size: 1.1em; animation: slideInUp 0.8s ease-out 0.3s both;">Un sitio web institucional es hoy el principal punto de contacto entre una empresa y sus clientes en internet.
+En Porta desarrollamos +120 sitios web, combinando funcionalidad, diseño y experiencia para conectar marcas con sus audiencias.</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="slide-header">
+            <img src="logotipo_blanco.png" class="porta-logo-small">
+            <span class="slide-number">01</span>
+        </div>
+        <div class="slide-content">
+    <h2 class="slide-title">Alcance del Proyecto</h2>
+    <p style="margin-bottom: 20px; color: var(--texto-secundario); font-size: 0.9em;">Soluciones integrales a medida bajo estándares de calidad Porta.</p>
+    
+    <div class="three-columns" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; align-items: start;">
+        
+        <div class="feature-module" style="height: 100%;">
+            <h4 style="font-size: 1.9em; margin-bottom: 12px;">🎨 Identidad y Estructura</h4>
+            <ul class="alcance-list" style="display: block; font-size: 0.92em; list-style: none;">
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Desarrollo a medida 100% </li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Look & Feel: Mobile First</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Hasta 10 páginas internas</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Secciones institucionales</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Galería de servicios/marcas</li>
+            </ul>
+        </div>
+
+        <div class="feature-module" style="height: 100%;">
+            <h4 style="font-size: 1.9em; margin-bottom: 12px;">⚙️ Gestión y Funciones</h4>
+            <ul class="alcance-list" style="display: block; font-size: 0.92em; list-style: none;">
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Panel de administración Porta</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Módulo Banner / Sliders</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Sucursales y Nosotros</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Módulo Usuarios de Panel</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Formulario de contacto</li>
+            </ul>
+        </div>
+
+        <div class="feature-module" style="height: 100%;">
+            <h4 style="font-size: 1.9em; margin-bottom: 12px;">📊 Datos y Conexión</h4>
+            <ul class="alcance-list" style="display: block; font-size: 0.92em; list-style: none;">
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> SEO Friendly optimizado</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Google Analytics inicial</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Facebook Pixel inicial</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Integración con Whatsapp</li>
+                <li style="margin-bottom: 6px;"><span class="check">✓</span> Mails transaccionales</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 15px; padding: 10px; border-top: 1px solid #eee; font-size: 0.9em; color: var(--texto-secundario); display: flex; gap: 20px; justify-content: center;">
+        <span><strong>Nota:</strong> No incluye API de Conversiones (GA4/FB).</span>
+        <span>No incluye Chatbots CRM.</span>
+    </div>
+        </div>
+        <div class="slide-footer">porta. | Alcance Detallado del Proyecto | porta.com.py</div>
+    </div>
+
+    <div class="slide">
+        <div class="slide-header">
+            <img src="logotipo_blanco.png" class="porta-logo-small">
+            <span class="slide-number">02</span>
+        </div>
+        <div class="slide-content">
+            <h2 class="slide-title">Inversión y Facilidades</h2>
+            <div class="two-columns" style="margin-top: 20px;">
+                <div class="highlight-box" style="animation: slideInLeft 0.8s ease-out 0.3s both;">
+                    <h3 style="font-size: 1em; text-transform: uppercase; transition: all 0.3s ease;">Pago Contado</h3>
+                    <div style="font-size: 2.8em; font-weight: 800; margin: 15px 0; color: var(--amber-400);">Gs. 5.000.000</div>
+                    <p style="font-size: 0.85em; opacity: 0.9;">IVA incluido. Hosting 12 meses gratis.</p>
+                </div>
+                <div style="background: rgba(82, 40, 131, 0.03); border: 2px dashed var(--lila-principal); border-radius: 12px; padding: 30px; text-align: center; animation: slideInRight 0.8s ease-out 0.3s both; transition: all 0.3s ease;" onmouseover="this.style.borderColor='var(--naranja-base)'; this.style.background='rgba(238, 123, 28, 0.05)'; this.style.transform='scale(1.02)';" onmouseout="this.style.borderColor='var(--lila-principal)'; this.style.background='rgba(82, 40, 131, 0.03)'; this.style.transform='scale(1)';">
+                    <h3 style="color: var(--lila-principal); font-size: 1em;">PLAN FINANCIADO</h3>
+                    <div style="font-size: 2.2em; font-weight: 800; color: var(--naranja-base); margin: 15px 0;">6x Gs. 990.000</div>
+                    <p style="font-size: 0.8em; color: var(--texto-secundario);">6 cuotas sin interés · IVA incluido</p>
+                </div>
+            </div>
+            <div style="margin-top: 30px; text-align: center; font-size: 0.9em; color: var(--texto-secundario);">
+                🌐 Adquisición de dominio anual: <strong>Gs. 330.000.</strong>
+            </div>
+        </div>
+        <div class="slide-footer">porta. | Propuesta Económica | porta.com.py</div>
+    </div>
+
+    <div class="slide">
+        <div class="slide-header">
+            <img src="logotipo_blanco.png" class="porta-logo-small">
+            <span class="slide-number">03</span>
+        </div>
+        <div class="slide-content">
+            <h2 class="slide-title">Tiempo y Escalabilidad</h2>
+            
+            <!-- Timeline Horizontal -->
+            <!-- Primera fila: Fases 1 y 2 (Centradas) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; position: relative; max-width: 800px; margin: 0 auto;">
+                <!-- Línea conectora horizontal superior (Fases 1-2) -->
+                <!-- FASE 1 -->
+                <div style="animation: slideInUp 0.8s ease-out 0.5s both; position: relative;">
+                    <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.85em; box-shadow: 0 4px 12px rgba(82, 40, 131, 0.4); transition: all 0.3s ease; z-index: 2; border: 3px solid white;" onmouseover="this.style.transform='translateX(-50%) scale(1.3)'; this.style.boxShadow='0 6px 18px rgba(82, 40, 131, 0.5)';" onmouseout="this.style.transform='translateX(-50%) scale(1)'; this.style.boxShadow='0 4px 12px rgba(82, 40, 131, 0.4)';">1</div>
+                    <div style="background: linear-gradient(135deg, rgba(82, 40, 131, 0.08), rgba(114, 41, 141, 0.05)); border-top: 3px solid var(--lila-principal); border-radius: 10px; padding: 60px 25px 25px; transition: all 0.3s ease; cursor: pointer; margin-top: 55px;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(82, 40, 131, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <h4 style="font-size: 1.25em; color: var(--lila-principal); margin-bottom: 8px; font-weight: 700;">Diseño Web</h4>
+                        <p style="font-size: 0.95em; color: var(--texto-secundario); margin-bottom: 12px; line-height: 1.2;">Elaboración de demo del proyecto en HTML para look and feel y estructura de información.</p>
+                        <div style="display: inline-block; background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio)); color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.8em; font-weight: 700;">📅 15 días hábiles</div>
+                    </div>
+                </div>
+
+                <!-- FASE 2 -->
+                <div style="animation: slideInUp 0.8s ease-out 0.6s both; position: relative;">
+                    <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, var(--purpura-medio), var(--lila-principal)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.85em; box-shadow: 0 4px 12px rgba(114, 41, 141, 0.4); transition: all 0.3s ease; z-index: 2; border: 3px solid white;" onmouseover="this.style.transform='translateX(-50%) scale(1.3)'; this.style.boxShadow='0 6px 18px rgba(114, 41, 141, 0.5)';" onmouseout="this.style.transform='translateX(-50%) scale(1)'; this.style.boxShadow='0 4px 12px rgba(114, 41, 141, 0.4)';">2</div>
+                    <div style="background: linear-gradient(135deg, rgba(114, 41, 141, 0.08), rgba(82, 40, 131, 0.05)); border-top: 3px solid var(--purpura-medio); border-radius: 10px; padding: 60px 25px 25px; transition: all 0.3s ease; cursor: pointer; margin-top: 55px;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(114, 41, 141, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <h4 style="font-size: 1.25em; color: var(--lila-principal); margin-bottom: 8px; font-weight: 700;">Modificaciones</h4>
+                        <p style="font-size: 0.95em; color: var(--texto-secundario); margin-bottom: 12px; line-height: 1.2;">Aquí nos das el feedback y nos pedís los ajustes que desees. Se pueden hacer hasta 2 tandas de modificaciones.</p>
+                        <div style="display: inline-block; background: linear-gradient(135deg, var(--purpura-medio), var(--lila-principal)); color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.8em; font-weight: 700;">⚡ 5 días hábiles</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salto entre filas -->
+            <br>
+
+            <!-- Segunda fila: Fases 3, 4 y 5 (Centradas) -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; position: relative; max-width: 900px; margin: 20px auto 0;">
+                <!-- FASE 3 -->
+                <div style="animation: slideInUp 0.8s ease-out 0.7s both; position: relative;">
+                    <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.85em; box-shadow: 0 4px 12px rgba(82, 40, 131, 0.4); transition: all 0.3s ease; z-index: 2; border: 3px solid white;" onmouseover="this.style.transform='translateX(-50%) scale(1.3)'; this.style.boxShadow='0 6px 18px rgba(82, 40, 131, 0.5)';" onmouseout="this.style.transform='translateX(-50%) scale(1)'; this.style.boxShadow='0 4px 12px rgba(82, 40, 131, 0.4)';">3</div>
+                    <div style="background: linear-gradient(135deg, rgba(82, 40, 131, 0.08), rgba(114, 41, 141, 0.05)); border-top: 3px solid var(--lila-principal); border-radius: 10px; padding: 60px 25px 25px; transition: all 0.3s ease; cursor: pointer; margin-top: 55px;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(82, 40, 131, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <h4 style="font-size: 1.25em; color: var(--lila-principal); margin-bottom: 8px; font-weight: 700;">Front y Panel</h4>
+                        <p style="font-size: 0.95em; color: var(--texto-secundario); margin-bottom: 12px; line-height: 1.2;">Elaboramos el panel de administracion y toda la lógica de la tienda y el catálogo.</p>
+                        <div style="display: inline-block; background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio)); color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.8em; font-weight: 700;">💻 15 días hábiles</div>
+                    </div>
+                </div>
+
+                <!-- FASE 4 -->
+                <div style="animation: slideInUp 0.8s ease-out 0.8s both; position: relative;">
+                    <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, var(--purpura-medio), var(--lila-principal)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.85em; box-shadow: 0 4px 12px rgba(114, 41, 141, 0.4); transition: all 0.3s ease; z-index: 2; border: 3px solid white;" onmouseover="this.style.transform='translateX(-50%) scale(1.3)'; this.style.boxShadow='0 6px 18px rgba(114, 41, 141, 0.5)';" onmouseout="this.style.transform='translateX(-50%) scale(1)'; this.style.boxShadow='0 4px 12px rgba(114, 41, 141, 0.4)';">4</div>
+                    <div style="background: linear-gradient(135deg, rgba(114, 41, 141, 0.08), rgba(82, 40, 131, 0.05)); border-top: 3px solid var(--purpura-medio); border-radius: 10px; padding: 60px 25px 25px; transition: all 0.3s ease; cursor: pointer; margin-top: 55px;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(114, 41, 141, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <h4 style="font-size: 1.25em; color: var(--lila-principal); margin-bottom: 8px; font-weight: 700;">Ajustes Finales</h4>
+                        <p style="font-size: 0.95em; color: var(--texto-secundario); margin-bottom: 12px; line-height: 1.2;">Aquí nos das el feedback y nos pedís los ajustes finales que desees para encaminar la puesta en marcha.</p>
+                        <div style="display: inline-block; background: linear-gradient(135deg, var(--purpura-medio), var(--lila-principal)); color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.8em; font-weight: 700;">🔧 5 días hábiles</div>
+                    </div>
+                </div>
+
+                <!-- FASE 5 -->
+                <div style="animation: slideInUp 0.8s ease-out 0.9s both; position: relative;">
+                    <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.85em; box-shadow: 0 4px 12px rgba(82, 40, 131, 0.4); transition: all 0.3s ease; z-index: 2; border: 3px solid white;" onmouseover="this.style.transform='translateX(-50%) scale(1.3)'; this.style.boxShadow='0 6px 18px rgba(82, 40, 131, 0.5)';" onmouseout="this.style.transform='translateX(-50%) scale(1)'; this.style.boxShadow='0 4px 12px rgba(82, 40, 131, 0.4)';">5</div>
+                    <div style="background: linear-gradient(135deg, rgba(82, 40, 131, 0.12), rgba(114, 41, 141, 0.1)); border-top: 3px solid var(--lila-principal); border-radius: 10px; padding: 60px 25px 25px; transition: all 0.3s ease; cursor: pointer; margin-top: 55px;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(82, 40, 131, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <h4 style="font-size: 1.25em; color: var(--lila-principal); margin-bottom: 8px; font-weight: 700;">Puesta en Línea</h4>
+                        <p style="font-size: 0.95em; color: var(--texto-secundario); margin-bottom: 12px; line-height: 1.2;">Ya solo queda poner en línea la web! Aquí hacemos lo relativo a pixels, analytics y otros códigos de seguimiento.</p>
+                        <div style="display: inline-block; background: linear-gradient(135deg, var(--lila-principal), var(--purpura-medio)); color: white; padding: 4px 10px; border-radius: 5px; font-size: 0.8em; font-weight: 700;">🚀 ¡GO!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 30px; padding: 20px; animation: slideInUp 0.6s ease-out 0.5s both;">
+                <p style="font-size: 0.9em; margin: 0;">"Mi función es asegurar que cada uno de estos puntos se cumpla con excelencia técnica y estratégica." — <strong>Luz</strong></p>
+            </div>
+        </div>
+        <div class="slide-footer">porta. | Tiempos de Entrega | porta.com.py</div>
+    </div>
+
+    <div class="slide cover-slide">
+        <div style="animation: fadeInUp 1s ease-out; position: relative; z-index: 2;">
+            <h1 style="font-size: 4em; color: white; margin-bottom: 10px; font-weight: 900; line-height: 1.1; animation: slideInDown 0.8s ease-out;" >Vamos Juntos</h1>
+            <p style="margin: 20px 0; color: rgba(255,255,255,0.9); font-size: 1.15em; animation: slideInUp 0.8s ease-out 0.2s both;">Reinventemos tu negocio con una Landing Page que venda.</p>
+            <div style="background: white; color: var(--lila-principal); padding: 18px 50px; border-radius: 50px; font-weight: 800; display: inline-block; animation: slideInUp 0.8s ease-out 0.4s both; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer;" onmouseover="this.style.transform='scale(1.08) translateY(-3px)'; this.style.boxShadow='0 15px 40px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.1)';">
+                Luz Ohinggins - CX Manager
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px;">
+    <button id="btn-prev" style="width:50px; height:50px; border-radius:50%; border:none; background:linear-gradient(135deg, rgba(82, 40, 131, 0.9), rgba(114, 41, 141, 0.9)); color:white; cursor:pointer; font-size:1.5em; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 15px rgba(82, 40, 131, 0.3); font-weight: bold;" onmouseover="this.style.transform='scale(1.1) translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(82, 40, 131, 0.5)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(82, 40, 131, 0.3)';">&#8249;</button>
+    <button id="btn-next" style="width:50px; height:50px; border-radius:50%; border:none; background:linear-gradient(135deg, rgba(238, 123, 28, 0.9), rgba(245, 158, 11, 0.9)); color:white; cursor:pointer; font-size:1.5em; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 4px 15px rgba(238, 123, 28, 0.3); font-weight: bold;" onmouseover="this.style.transform='scale(1.1) translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(238, 123, 28, 0.5)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(238, 123, 28, 0.3)';">&#8250;</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+        let isTransitioning = false;
+
+        function showSlide(index) {
+            if (isTransitioning) return;
+            
+            if (index < 0) index = slides.length - 1;
+            if (index >= slides.length) index = 0;
+            
+            if (index === currentSlide) return;
+            
+            isTransitioning = true;
+            
+            // Remover clase active del slide anterior
+            slides[currentSlide].classList.remove('active');
+            
+            // Pequeño delay para que la transición CSS funcione
+            setTimeout(() => {
+                // Agregar clase active al nuevo slide
+                slides[index].classList.add('active');
+                currentSlide = index;
+                
+                // Permitir siguiente transición después de que termine la actual
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 600);
+            }, 50);
+        }
+
+        // Event listeners para botones
+        document.getElementById('btn-prev').addEventListener('click', () => showSlide(currentSlide - 1));
+        document.getElementById('btn-next').addEventListener('click', () => showSlide(currentSlide + 1));
+        
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') showSlide(currentSlide + 1);
+            if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+        });
+
+        // Efecto Parallax mejorado
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 20;
+            const y = (e.clientY / window.innerHeight) * 20;
+            document.querySelectorAll('.hero-decor').forEach((d, index) => {
+                const speed = 1 + (index * 0.5);
+                d.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+
+        // Mostrar primer slide
+        slides[0].classList.add('active');
+    });
+</script>
+</body>
+</html>
